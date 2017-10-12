@@ -1,7 +1,8 @@
 import React from 'react'
+import HelloWorld from '../components/HelloWorld'
 
-const Index => props => {
-  return <div>Hello World</div>
+const Index = props => {
+  return <HelloWorld {...props} />
 }
 
 export default Index

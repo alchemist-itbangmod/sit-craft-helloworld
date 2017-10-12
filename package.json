@@ -2,12 +2,20 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "dependencies": {
-    "axios": "^0.16.2",
     "next": "^4.0.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "enzyme": "3.0.0",
+    "enzyme-adapter-react-16": "1.0.0",
+    "enzyme-to-json": "3.0.1",
+    "jest": "21.2.1",
+    "raf": "3.3.2",
+    "react-test-renderer": "16.0.0"
   }
 }
