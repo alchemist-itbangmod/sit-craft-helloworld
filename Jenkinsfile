@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        slackSend channel: '#devops', color: '#439FE0', message: '["${JOB_NAME}"] เริ่มต้นการ Build #${BUILD_NUMBER}', teamDomain: 'alchemist-itbangmod'
+        slackSend channel: '#devops', color: '#439FE0', message: '[sit-craft-helloworld-site] เริ่มต้นการ Build #$BUILD_NUMBER', teamDomain: 'alchemist-itbangmod'
         sh 'npm install'
         sh 'npm run build'
       }
@@ -27,7 +27,7 @@ pipeline {
       steps {
         sh 'echo "Deploy To Development"'
         sh 'scp "${JOB_NAME}-${BUILD_NUMBER}.tar.gz" ${DEV_USERNAME}@${DEV_HOSTNAME}:/jenkins-artifact/sit-craft-helloworld/'
-        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf "${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C /jenkins-app/sit-craft-helloworld/"'
+        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf /jenkins-artifact/sit-craft-helloworld/"${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C /jenkins-app/sit-craft-helloworld/"'
       }
     }
     stage('staging') {
