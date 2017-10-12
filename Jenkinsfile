@@ -2,6 +2,9 @@ pipeline {
   environment {
     DEV_USERNAME = "deployment"
     DEV_HOSTNAME = "helloworld.itbangmod.in.th"
+    DEV_REMOTE_ARTIFACT_PATH = "/jenkins-artifact/sit-craft-helloworld/"
+    DEV_REMOTE_DEPLOY_PATH = "/jenkins-app/sit-craft-helloworld/"
+    ARCHIVE_ARTIFACT_PATH = "/jenkins-artifact/sit-craft-helloworld"
   }
   agent any
   stages {
@@ -19,15 +22,14 @@ pipeline {
     }
     stage('zipfile') {
       steps {
-        sh 'echo ${JOB_NAME}-${BUILD_NUMBER}'
-        sh 'tar cvzf "${JOB_NAME}-${BUILD_NUMBER}.tar.gz" *'
+        sh 'tar cvzf "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" *'
       }
     }
     stage('development') {
       steps {
         sh 'echo "Deploy To Development"'
-        sh 'scp "${JOB_NAME}-${BUILD_NUMBER}.tar.gz" ${DEV_USERNAME}@${DEV_HOSTNAME}:/jenkins-artifact/sit-craft-helloworld/'
-        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf /jenkins-artifact/sit-craft-helloworld/"${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C /jenkins-app/sit-craft-helloworld/"'
+        sh 'scp "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" ${DEV_USERNAME}@${DEV_HOSTNAME}:${DEV_REMOTE_ARTIFACT_PATH}'
+        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf ${DEV_REMOTE_ARTIFACT_PATH}/"${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C ${DEV_REMOTE_DEPLOY_PATH}"'
       }
     }
     stage('staging') {
