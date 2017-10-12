@@ -7,14 +7,14 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        slackSend channel: '#devops', color: '#439FE0', message: '[${JOB_NAME}] เริ่มต้นการ Build #${BUILD_NUMBER}', teamDomain: 'alchemist-itbangmod'
+        slackSend channel: '#devops', color: '#439FE0', message: '["${JOB_NAME}"] เริ่มต้นการ Build #${BUILD_NUMBER}', teamDomain: 'alchemist-itbangmod'
         sh 'npm install'
         sh 'npm run build'
       }
     }
     stage('unit-test') {
       steps {
-        sh 'npm run jest'
+        sh 'npm run test'
       }
     }
     stage('zipfile') {
