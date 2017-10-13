@@ -6,7 +6,7 @@ export const HelloWorld = ({ text }) => (
 
 class HelloWorldContainer extends React.Component {
   render() {
-    <HelloWorld />
+    return <HelloWorld text="hello-world" />
   }
 }
 
