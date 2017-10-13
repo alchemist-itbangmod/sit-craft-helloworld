@@ -4,6 +4,7 @@ pipeline {
     DEV_HOSTNAME = "helloworld.itbangmod.in.th"
     DEV_REMOTE_ARTIFACT_PATH = "/jenkins-artifact/sit-craft-helloworld/"
     DEV_REMOTE_DEPLOY_PATH = "/jenkins-app/sit-craft-helloworld/"
+    DEV_REMOTE_PM2_PROCESS_NAME = "sit-craft-helloworld-site"
     ARCHIVE_ARTIFACT_PATH = "/jenkins-artifact/sit-craft-helloworld"
   }
   agent any
@@ -29,7 +30,7 @@ pipeline {
       steps {
         sh 'scp "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" ${DEV_USERNAME}@${DEV_HOSTNAME}:${DEV_REMOTE_ARTIFACT_PATH}'
         sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf ${DEV_REMOTE_ARTIFACT_PATH}/"${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C ${DEV_REMOTE_DEPLOY_PATH}"'
-        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "sudo pm2 restart sit-craft-helloworld-site"'
+        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "sudo pm2 restart ${DEV_REMOTE_PM2_PROCESS_NAME}"'
         slackSend channel: '#devops', color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Development Server แล้ว", teamDomain: 'alchemist-itbangmod'
       }
     }
@@ -54,10 +55,10 @@ pipeline {
   }
   post {
     always {
-      slackSend channel: '#devops', color: 'good', message: "[${JOB_NAME}] Build ที่ #${BUILD_NUMBER} Pipeline เสร็จสิ้นแล้ว", teamDomain: 'alchemist-itbangmod'
+      echo 'Success XD'
     }
     success {
-      echo 'Success XD'
+      slackSend channel: '#devops', color: 'good', message: "[${JOB_NAME}] Build ที่ #${BUILD_NUMBER} Pipeline เสร็จสิ้นแล้ว", teamDomain: 'alchemist-itbangmod'
     }
     failure {
       slackSend channel: '#devops', color: 'danger', message: "[${JOB_NAME}] แย่แล้ว มีบางอย่างผิดปกติ (Build ที่ #${BUILD_NUMBER})", teamDomain: 'alchemist-itbangmod'
