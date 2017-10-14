@@ -37,9 +37,9 @@ pipeline {
     }
     stage('staging') {
       steps {
-        // slackSend channel: '#devops', color: '#ffab35', message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Staging ? : ${BUILD_URL}/${DEV_CONFIRM_ID}", teamDomain: 'alchemist-itbangmod'        
+        slackSend channel: '#devops', color: '#ffab35', message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Staging ? : <${BUILD_URL}/input|Click to proceed>", teamDomain: 'alchemist-itbangmod'        
         timeout(time: 7, unit: 'DAYS') {
-          input message: 'Deploy to Staging ?', id: 'test-dev-url'
+          input message: 'Deploy to Staging ?', ok: 'Deploy to Staging''
         }
         sh 'echo "Deploy To Stagging"'
         slackSend channel: '#devops', color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Staging Server แล้ว", teamDomain: 'alchemist-itbangmod'        
