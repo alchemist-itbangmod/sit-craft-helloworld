@@ -18,7 +18,7 @@ pipeline {
     }
     stage('unit-test') {
       steps {
-        sh 'yarn run test'
+        sh 'jest --ci --testResultsProcessor="jest-junit"'
       }
     }
     stage('zipfile') {
@@ -55,7 +55,7 @@ pipeline {
   }
   post {
     always {
-      echo 'Success XD'
+      junit "junit.xml"
     }
     success {
       slackSend channel: '#devops', color: 'good', message: "[${JOB_NAME}] Build ที่ #${BUILD_NUMBER} Pipeline เสร็จสิ้นแล้ว", teamDomain: 'alchemist-itbangmod'
@@ -64,7 +64,7 @@ pipeline {
       slackSend channel: '#devops', color: 'danger', message: "[${JOB_NAME}] แย่แล้ว มีบางอย่างผิดปกติ (Build ที่ #${BUILD_NUMBER})", teamDomain: 'alchemist-itbangmod'
     }
     unstable {
-      echo 'Not OK Dude'
+      slackSend channel: '#devops', color: '#ffab35', message: "[${JOB_NAME}] มันไม่เสถียรนะ (Build ที่ #${BUILD_NUMBER})", teamDomain: 'alchemist-itbangmod'
     }
     changed {
       echo 'This will run only if the state of the Pipeline has changed'
