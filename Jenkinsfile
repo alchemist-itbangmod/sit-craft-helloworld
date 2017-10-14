@@ -5,6 +5,7 @@ pipeline {
     DEV_REMOTE_ARTIFACT_PATH = "/jenkins-artifact/sit-craft-helloworld/"
     DEV_REMOTE_DEPLOY_PATH = "/jenkins-app/sit-craft-helloworld/"
     DEV_REMOTE_PM2_PROCESS_NAME = "sit-craft-helloworld-site"
+    DEV_CONFIRM_ID = "deploy-dev"
     ARCHIVE_ARTIFACT_PATH = "/jenkins-artifact/sit-craft-helloworld"
   }
   agent any
@@ -36,8 +37,9 @@ pipeline {
     }
     stage('staging') {
       steps {
+        // slackSend channel: '#devops', color: '#ffab35', message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Staging ? : ${BUILD_URL}/${DEV_CONFIRM_ID}", teamDomain: 'alchemist-itbangmod'        
         timeout(time: 7, unit: 'DAYS') {
-          input 'Deploy to Staging ?'
+          input message: 'Deploy to Staging ?' id: 'test-dev-url'
         }
         sh 'echo "Deploy To Stagging"'
         slackSend channel: '#devops', color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Staging Server แล้ว", teamDomain: 'alchemist-itbangmod'        
