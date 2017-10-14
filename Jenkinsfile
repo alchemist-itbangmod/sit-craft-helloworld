@@ -12,9 +12,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        slackSend
-          color: '#439FE0',
-          message: "[${JOB_NAME}] เริ่มต้นการ Build #${BUILD_NUMBER}"
+        slackSend color: '#439FE0', message: "[${JOB_NAME}] เริ่มต้นการ Build #${BUILD_NUMBER}"
         sh 'yarn install'
         sh 'yarn run build'
       }
@@ -22,9 +20,7 @@ pipeline {
     stage('unit-test') {
       steps {
         sh 'jest --ci --testResultsProcessor="jest-junit"'
-        slackSend
-          color: 'good',
-          message: "[${JOB_NAME}] Test Build ที่ #${BUILD_NUMBER}) ผ่านแล้ว XD"
+        slackSend color: 'good', message: "[${JOB_NAME}] Test Build ที่ #${BUILD_NUMBER}) ผ่านแล้ว XD"
       }
     }
     stage('zipfile') {
@@ -37,37 +33,31 @@ pipeline {
         sh 'scp "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" ${DEV_USERNAME}@${DEV_HOSTNAME}:${DEV_REMOTE_ARTIFACT_PATH}'
         sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf ${DEV_REMOTE_ARTIFACT_PATH}/"${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C ${DEV_REMOTE_DEPLOY_PATH}"'
         sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "sudo pm2 restart ${DEV_REMOTE_PM2_PROCESS_NAME}"'
-        slackSend
-          color: 'good',
-          message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Development Server แล้ว"
+        slackSend color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Development Server แล้ว"
       }
     }
     stage('staging') {
       steps {
         slackSend
-          color: '#ffab35',
-          message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Staging ? : <${BUILD_URL}/input|Click to proceed>"    
+          color: '#ffab35', message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Staging ? : <${BUILD_URL}/input|Click to proceed>"    
         timeout(time: 7, unit: 'DAYS') {
           input message: 'Deploy to Staging ?', ok: 'Deploy to Staging'
         }
         sh 'echo "Deploy To Stagging"'
         slackSend
-          color: 'good',
-          message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Staging Server แล้ว"
+          color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Staging Server แล้ว"
       }
     }
     stage('production') {
       steps {
         slackSend
-          color: '#ffab35',
-          message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Production ? : <${BUILD_URL}/input|Click to proceed>"
+          color: '#ffab35', message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Production ? : <${BUILD_URL}/input|Click to proceed>"
         timeout(time: 7, unit: 'DAYS') {
           input 'Deploy to Production ?'
         }
         sh 'echo "Deploy To Production"'
         slackSend
-          color: 'good',
-          message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Production Server แล้ว วู้หู้วววววว"
+          color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Production Server แล้ว วู้หู้วววววว"
       }
     }
   }
