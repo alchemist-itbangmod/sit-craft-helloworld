@@ -25,7 +25,7 @@ pipeline {
     }
     stage('zipfile') {
       steps {
-        sh 'tar cvzf "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" *'
+        sh 'tar czf "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" .'
       }
     }
     stage('development') {
