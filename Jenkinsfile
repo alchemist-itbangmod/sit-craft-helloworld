@@ -32,7 +32,7 @@ pipeline {
       steps {
         sh 'scp "${ARCHIVE_ARTIFACT_PATH}/${JOB_NAME}-${BUILD_NUMBER}.tar.gz" ${DEV_USERNAME}@${DEV_HOSTNAME}:${DEV_REMOTE_ARTIFACT_PATH}'
         sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "tar -xf ${DEV_REMOTE_ARTIFACT_PATH}/"${JOB_NAME}-${BUILD_NUMBER}.tar.gz" -C ${DEV_REMOTE_DEPLOY_PATH}"'
-        sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "cd ${DEV_REMOTE_DEPLOY_PATH} && sudo yarn build"'
+        // sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "cd ${DEV_REMOTE_DEPLOY_PATH} && sudo yarn build"'
         sh 'ssh ${DEV_USERNAME}@${DEV_HOSTNAME} "sudo pm2 restart ${DEV_REMOTE_PM2_PROCESS_NAME}"'
         slackSend color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Development Server แล้ว"
       }
