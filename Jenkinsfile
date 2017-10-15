@@ -51,7 +51,7 @@ pipeline {
       steps {
         slackSend color: '#ffab35', message: "[${JOB_NAME}] ต้องการ Deploy Build ที่ #${BUILD_NUMBER}) ลงบน Production ? : <${BUILD_URL}/input|Click to proceed>"
         timeout(time: 7, unit: 'DAYS') {
-          input 'Deploy to Production ?'
+          input message: 'Deploy to Production ?', ok: 'Deploy to Production'
         }
         sh 'echo "Deploy To Production"'
         slackSend color: 'good', message: "[${JOB_NAME}] ได้ทำการติดตั้ง Build ที่ #${BUILD_NUMBER} ลงบน Production Server แล้ว วู้หู้วววววว"
